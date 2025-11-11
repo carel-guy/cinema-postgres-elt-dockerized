@@ -1,0 +1,41 @@
+version : '3.8'
+
+services:
+  source_postgres:
+    image: postgres:latest
+    ports:
+      - "5433:5432"
+    networks:
+      - etl_network
+    environment:
+      - POSTGRES_DB=source_db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1724
+    volumes:
+      - ./source_db_init/init.sql:/docker-entrypoint-initdb.d/init.sql
+  
+  destination_postgres:
+    image: postgres:latest
+    ports:
+      - "5434:5432"
+    networks:
+      - etl_network
+    environment:
+      - POSTGRES_DB=destination_db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=1724
+
+  etl_script:
+    build:
+      context: /Users/guycarelarakaza/Documents/GitHub/ETL/elt/
+      dockerfile: Dockerfile
+    command: ["python", "etl_script.py"]
+    networks:
+      - etl_network
+    depends_on:
+      - source_postgres
+      - destination_postgres
+    
+networks:
+  etl_network:
+    driver: bridge

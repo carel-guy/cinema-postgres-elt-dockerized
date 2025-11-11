@@ -1,0 +1,57 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+env/
+venv/
+.venv/
+.Python
+
+# === Virtual environments ===
+.env
+.venv
+ENV/
+env.bak/
+venv.bak/
+
+# === Logs ===
+*.log
+logs/
+*.out
+*.err
+
+# === Byte-compiled / cache ===
+*.pyc
+*.pkl
+__pycache__/
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+
+# === IDE files ===
+.vscode/
+.idea/
+*.swp
+
+# === Docker ===
+# Ignore local volumes and image layers
+data/
+*.pid
+*.sock
+docker-compose.override.yml
+
+# === Postgres dumps ===
+*.sql
+*.dump
+
+# === Misc ===
+*.zip
+*.tar.gz
+*.tmp
+*.bak
