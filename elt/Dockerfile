@@ -9,6 +9,6 @@ RUN apt-get update && \
     apt-get install -y postgresql-client-18 && \
     apt-get clean
 
-COPY etl_script.py .
+COPY elt_runner.py .
 
-CMD ["python", "etl_script.py"]
+CMD ["python", "elt_runner.py"]

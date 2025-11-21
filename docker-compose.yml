@@ -24,16 +24,27 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=1724
 
-  etl_script:
+  elt_replicator:
     build:
-      context: /Users/guycarelarakaza/Documents/GitHub/ETL/elt/
+      context: ./elt
       dockerfile: Dockerfile
-    command: ["python", "etl_script.py"]
+    command: ["python", "elt_runner.py"]
     networks:
       - elt_network
     depends_on:
       - source_postgres
       - destination_postgres
+    environment:
+      SOURCE_DB_NAME: source_db
+      SOURCE_DB_USER: root
+      SOURCE_DB_PASSWORD: 1724
+      SOURCE_DB_HOST: source_postgres
+      SOURCE_DB_PORT: 5432
+      DESTINATION_DB_NAME: destination_db
+      DESTINATION_DB_USER: root
+      DESTINATION_DB_PASSWORD: 1724
+      DESTINATION_DB_HOST: destination_postgres
+      DESTINATION_DB_PORT: 5432
 
   dbt:
     build:
@@ -44,16 +55,16 @@ services:
         echo '⏳ Waiting for destination_postgres to be ready...' &&
         until pg_isready -h destination_postgres -U root; do sleep 2; done &&
         echo '✅ Database ready, running dbt...' &&
-        dbt run --profiles-dir /root/.dbt --project-dir /usr/app/postgres_etl_dbt
+        dbt run --profiles-dir /root/.dbt --project-dir /usr/app/postgres_elt_dbt
       "
     networks:
       - elt_network
     volumes:
-      - ./postgres_etl_dbt:/usr/app/postgres_etl_dbt
+      - ./postgres_elt_dbt:/usr/app/postgres_elt_dbt
       - ~/.dbt:/root/.dbt
 
     depends_on:
-      - etl_script
+      - elt_replicator
 
     environment:
       DBT_PROFILE: default

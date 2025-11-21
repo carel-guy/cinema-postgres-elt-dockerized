@@ -1,0 +1,107 @@
+version: 2
+
+models:
+  - name: films
+    description: "Films et métadonnées chargés depuis la base source."
+    columns:
+      - name: film_id
+        description: "Identifiant unique du film."
+        tests:
+          - unique
+          - not_null
+      - name: title
+        description: "Titre complet."
+        tests:
+          - not_null
+      - name: release_date
+        description: "Date de sortie."
+        tests:
+          - not_null
+      - name: price
+        description: "Prix de référence."
+        tests:
+          - not_null
+      - name: rating
+        description: "Classification MPAA."
+        tests:
+          - not_null
+      - name: user_rating
+        description: "Note moyenne des utilisateurs."
+        tests:
+          - not_null
+
+  - name: actors
+    description: "Référentiel des acteurs uniques."
+    columns:
+      - name: actor_id
+        description: "Identifiant unique de l'acteur."
+        tests:
+          - unique
+          - not_null
+      - name: actor_name
+        description: "Nom complet publié."
+        tests:
+          - not_null
+
+  - name: film_actors
+    description: "Table de liaison film ↔ acteur."
+    columns:
+      - name: film_id
+        description: "Identifiant du film."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('films')
+              field: film_id
+      - name: actor_id
+        description: "Identifiant de l'acteur."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('actors')
+              field: actor_id
+
+  - name: film_ratings
+    description: "Vue analytique combinant films, acteurs et métriques de qualité."
+    columns:
+      - name: film_id
+        description: "Identifiant unique du film."
+        tests:
+          - unique
+          - not_null
+      - name: title
+        description: "Titre."
+        tests:
+          - not_null
+      - name: release_date
+        description: "Date de sortie."
+        tests:
+          - not_null
+      - name: price
+        description: "Prix de référence."
+        tests:
+          - not_null
+      - name: rating
+        description: "Classification MPAA."
+        tests:
+          - not_null
+      - name: user_rating
+        description: "Note moyenne des utilisateurs."
+        tests:
+          - not_null
+      - name: rating_category
+        description: "Segmentation qualitative dérivée de la note."
+        tests:
+          - not_null
+      - name: actors
+        description: "Liste ordonnée des acteurs associés."
+        tests:
+          - not_null
+      - name: actor_count
+        description: "Nombre d'acteurs associés."
+        tests:
+          - not_null
+      - name: avg_actor_rating
+        description: "Note moyenne des acteurs, calculée sur l'ensemble de leur filmographie."
+        tests:
+          - not_null
